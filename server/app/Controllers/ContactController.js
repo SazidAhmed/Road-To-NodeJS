@@ -1,11 +1,13 @@
 const asyncHandler = require('express-async-handler')
 
 const Contact = require('../models/Contact')
+const User = require('../models/User')
 
 
 const contactList = asyncHandler(
     async (req, res) => {
-        const contactList = await Contact.find()
+        // const contactList = await Contact.find()
+        const contactList = await Contact.find({ user: req.user.id })
 
         res.status(200).json(contactList)
     }
@@ -30,6 +32,7 @@ const contactCreate = asyncHandler(
             throw new Error('Please add a name field')
         }
         const contact = await Contact.create({
+            user: req.user.id,
             name: req.body.name
         })
 
@@ -48,6 +51,18 @@ const contactUpdate = asyncHandler(
             res.status(400)
             throw new Error('Contact not found')
         }
+        
+        const user = User.findById(req.user.id)
+        if(!user){
+            res.status(401)
+            throw new Error('User not found')
+        }
+
+        if(contact.user.toString() !== user.id){
+            res.status(401)
+            throw new Error('You are not authorized')
+        }
+
         const updatedContact = await Contact.findByIdAndUpdate(req.params.id, req.body, {new:true})
         
         res.status(200).json({
@@ -65,6 +80,18 @@ const contactDelete = asyncHandler(
             res.status(400)
             throw new Error('Contact not found')
         }
+
+        const user = User.findById(req.user.id)
+        if(!user){
+            res.status(401)
+            throw new Error('User not found')
+        }
+
+        if(contact.user.toString() !== user.id){
+            res.status(401)
+            throw new Error('You are not authorized')
+        }
+        
         await contact.remove()
         
         res.status(200).json({

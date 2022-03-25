@@ -13,14 +13,14 @@ router.post('/login', login)
 router.get('/authUser', protect, authUser)
 
 //Contact apis
-router.get('/contactList', contactList)
+router.get('/contactList', protect, contactList)
 
-router.get('/contactGetById/:id', contactGetById)
+router.get('/contactGetById/:id', protect, contactGetById)
 
-router.post('/contactCreate', contactCreate)
+router.post('/contactCreate', protect, contactCreate)
 
-router.put('/contactUpdate/:id', contactUpdate)
+router.put('/contactUpdate/:id', protect, contactUpdate)
 
-router.delete('/contactDelete/:id', contactDelete)
+router.delete('/contactDelete/:id', protect, contactDelete)
 
 module.exports = router

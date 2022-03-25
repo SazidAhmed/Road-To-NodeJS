@@ -9,7 +9,15 @@ const contactSchema = mongoose.Schema(
     },
     name: {
       type: String,
-      required: [true, 'Please add a text value'],
+      required: [true, 'Please add a contact name'],
+    },
+    email: {
+      type: String,
+      required: [true, 'Please add an email address'],
+    },
+    mobile: {
+      type: Number,
+      required: [true, 'Please add a mobile number'],
     },
   },
   {

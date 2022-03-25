@@ -21,19 +21,35 @@ const contactGetById = asyncHandler(
             res.status(400)
             throw new Error('Contact not found')
         }
+
+        const user = await User.findById(req.user.id)
+        if(!user){
+            res.status(401)
+            throw new Error('User not found')
+        }
+
+        if(contact.user.toString() !== user.id){
+            res.status(401)
+            throw new Error('You are not authorized')
+        }
+
         res.status(200).json(contact)
     }
 )
 
 const contactCreate = asyncHandler(
     async (req, res) => {
-        if (!req.body.name) {
+        const { name, email, mobile } = req.body
+
+        if (!name || !email || !mobile) {
             res.status(400)
-            throw new Error('Please add a name field')
+            throw new Error('Please all fields')
         }
         const contact = await Contact.create({
             user: req.user.id,
-            name: req.body.name
+            name: name,
+            email: email,
+            mobile: mobile
         })
 
         res.status(200).json({
@@ -52,7 +68,7 @@ const contactUpdate = asyncHandler(
             throw new Error('Contact not found')
         }
         
-        const user = User.findById(req.user.id)
+        const user = await User.findById(req.user.id)
         if(!user){
             res.status(401)
             throw new Error('User not found')
@@ -81,7 +97,7 @@ const contactDelete = asyncHandler(
             throw new Error('Contact not found')
         }
 
-        const user = User.findById(req.user.id)
+        const user = await User.findById(req.user.id)
         if(!user){
             res.status(401)
             throw new Error('User not found')
@@ -91,7 +107,7 @@ const contactDelete = asyncHandler(
             res.status(401)
             throw new Error('You are not authorized')
         }
-        
+
         await contact.remove()
         
         res.status(200).json({

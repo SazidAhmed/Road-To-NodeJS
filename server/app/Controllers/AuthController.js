@@ -67,9 +67,14 @@ const login = asyncHandler(
     }
 )
 
-const getMe = asyncHandler(
+const authUser = asyncHandler(
     async (req, res) => {
-    res.status(200).json(req.user)
+        const { _id, name, email } = await User.findById(req.user.id)
+        res.status(200).json({
+            id:_id,
+            name: name,
+            email: email
+        })
   }
 )
 
@@ -80,5 +85,5 @@ const generateToken = (id) => {
 module.exports ={
     register,
     login,
-    getMe
+    authUser
 }

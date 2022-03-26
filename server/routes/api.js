@@ -7,7 +7,7 @@ const { protect } = require('../app/middleware/AuthMiddleware')
 //Controllers
 const { register, login, authUser } = require('../app/Controllers/Auth/AuthController')
 const { getTransactions } = require('../app/Controllers/Account/Transaction')
-const { createNewAccount, generatePublicKey } = require('../app/Controllers/Account/Account')
+const { createNewAccount, generatePublicKey, generateSignature } = require('../app/Controllers/Account/Account')
 
 //Auth apis
 router.post('/register', register)
@@ -20,5 +20,6 @@ router.get('/getTransactions', getTransactions)
 //Create Account
 router.get('/createNewAccount', createNewAccount)
 router.get('/generatePublicKey/:key', generatePublicKey)
+router.get('/generateSignature/:key', generateSignature)
 
 module.exports = router
